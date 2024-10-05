@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D Solar System with Dynamic Labels, Custom Controls, and Asteroid Belt</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="menu_bar.css">
     <style>
         body,
         html {
@@ -18,11 +19,36 @@
 </head>
 
 <body>
-    <div style="position: absolute; top: 10px; left: 10px; color: white; z-index: 100;">
+    <div class="menu-bar">
+    <label class="label-container" for="simulationSpeed">Simulation Speed:</label>
+    <input type="range" id="speedControl" min="1" max="100" value="1">
+    <span class="span-container" id="speedValue">x</span>
+    
+    <label class="label-container" for="scale">Scale:</label>
+    <input type="range" id="scale" min="1" max="10" value="5">
+    <span class="span-container" id="scaleValue">5</span>
+    
+    <label class="label-container" for="planetSelect">Choose Planet:</label>
+    <select id="planetSelect">
+        <option value="Earth">Earth</option>
+        <option value="Mars">Mars</option>
+        <option value="Jupiter">Jupiter</option>
+        <option value="Venus">Venus</option>
+    </select>
+    
+    <label class="label-container" for="massSelect">Choose Mass:</label>
+    <select id="massSelect">
+        <option value="1">1 (Earth mass)</option>
+        <option value="0.38">0.38 (Mars mass)</option>
+        <option value="317.8">317.8 (Jupiter mass)</option>
+        <option value="0.9">0.9 (Venus mass)</option>
+    </select>
+    <a href="./index.html"><button class="space-button space-button-back">Back</button></a>
+    </div>
+    <!-- <div style="position: absolute; top: 10px; left: 10px; color: white; z-index: 100;">
         <label for="speedControl">Simulation Speed: <span id="speedValue">1.0</span>x</label>
         <input type="range" id="speedControl" min="0.1" max="5" step="0.1" value="1" style="width: 300px;">
-        <a href="./index.html"><button class="space-button">Back</button></a>
-    </div>
+    </div> -->
 
 
 

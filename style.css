@@ -67,6 +67,10 @@ h1 {
     /* Animation for button entry */
 }
 
+.space-button-back {
+    padding: 5px 30px;
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
