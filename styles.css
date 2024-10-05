@@ -1,0 +1,30 @@
+body {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: black;
+    color: white;
+}
+
+.menu-bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-bottom: 2px solid white;
+    width: 100%;
+}
+
+label {
+    margin: 0 10px;
+}
+
+input[type="range"] {
+    margin: 0 10px;
+}
+
+select {
+    margin: 0 10px;
+}
