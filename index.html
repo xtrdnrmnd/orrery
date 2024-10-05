@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Solar System with Orbits and Custom Controls</title>
+    <title>3D Solar System with Dynamic Labels and Custom Controls</title>
     <style>
         body, html {
             margin: 0;
@@ -36,21 +36,22 @@
 
         // Step 4: Define the properties of planets and create their orbits
         const planetsData = [
-            { name: "Mercury", distance: 5, size: 0.2, color: 0xaaaaaa, speed: 0.02 },
-            { name: "Venus", distance: 7, size: 0.4, color: 0xffcc00, speed: 0.015 },
-            { name: "Earth", distance: 10, size: 0.5, color: 0x0000ff, speed: 0.01 },
-            { name: "Mars", distance: 13, size: 0.3, color: 0xff0000, speed: 0.008 },
-            { name: "Jupiter", distance: 18, size: 1.1, color: 0xff9900, speed: 0.005 },
-            { name: "Saturn", distance: 24, size: 0.9, color: 0xffff66, speed: 0.003 },
-            { name: "Uranus", distance: 30, size: 0.7, color: 0x66ccff, speed: 0.002 },
-            { name: "Neptune", distance: 35, size: 0.6, color: 0x0000ff, speed: 0.001 }
+            { name: "Mercury", distance: 5, size: 0.2, color: 0xaaaaaa, speed: 0.02, textColor: "lightgray" },
+            { name: "Venus", distance: 7, size: 0.4, color: 0xffcc00, speed: 0.015, textColor: "yellow" },
+            { name: "Earth", distance: 10, size: 0.5, color: 0x0000ff, speed: 0.01, textColor: "lightblue" },
+            { name: "Mars", distance: 13, size: 0.3, color: 0xff0000, speed: 0.008, textColor: "red" },
+            { name: "Jupiter", distance: 18, size: 1.1, color: 0xff9900, speed: 0.005, textColor: "orange" },
+            { name: "Saturn", distance: 24, size: 0.9, color: 0xffff66, speed: 0.003, textColor: "lightyellow" },
+            { name: "Uranus", distance: 30, size: 0.7, color: 0x66ccff, speed: 0.002, textColor: "lightcyan" },
+            { name: "Neptune", distance: 35, size: 0.6, color: 0x0000ff, speed: 0.001, textColor: "lightblue" }
         ];
 
         // Store the planet meshes and orbital data
         const planets = [];
+        const planetLabels = [];  // To store planet labels
 
-        // Function to create a planet
-        function createPlanet({ name, distance, size, color }) {
+        // Function to create a planet and its label
+        function createPlanet({ name, distance, size, color, textColor }) {
             const geometry = new THREE.SphereGeometry(size, 32, 32);
             const material = new THREE.MeshLambertMaterial({ color: color });
             const planet = new THREE.Mesh(geometry, material);
@@ -68,7 +69,32 @@
             scene.add(planet);
             scene.add(orbit);
 
+            // Create the planet label with dynamic font size and color
+            const label = createTextLabel(name, textColor, size);
+            label.position.set(distance, size + 0.5, 0);  // Position label above the planet
+            scene.add(label);
+
+            planetLabels.push({ mesh: label, planet: planet });
+
             return { mesh: planet, distance: distance, angle: 0, speed: 0.01 };
+        }
+
+        // Function to create a text label as a THREE.Sprite with dynamic color and size
+        function createTextLabel(name, textColor, size) {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            const fontSize = size * 60;  // Dynamic font size based on planet size
+            context.font = `Bold ${fontSize}px Arial`;
+            context.fillStyle = textColor;
+            context.fillText(name, 10, 50);  // Position text on the canvas
+
+            // Create a texture from the canvas
+            const texture = new THREE.CanvasTexture(canvas);
+            const spriteMaterial = new THREE.SpriteMaterial({ map: texture });
+            const sprite = new THREE.Sprite(spriteMaterial);
+            sprite.scale.set(10, 5, 1);  // Adjust the size of the label based on font size
+
+            return sprite;
         }
 
         // Create the planets and store them in the planets array
@@ -107,7 +133,15 @@
 
         // Zoom in/out with mouse wheel
         document.addEventListener('wheel', (event) => {
-            camera.position.z += event.deltaY * 0.05;
+            // Calculate direction from the camera to the Sun
+            const direction = new THREE.Vector3();
+            direction.subVectors(sun.position, camera.position).normalize();
+
+            // Calculate zoom amount (positive for zooming in, negative for zooming out)
+            const zoomAmount = event.deltaY * 0.05;
+
+            // Move the camera along the direction vector
+            camera.position.addScaledVector(direction, zoomAmount);
         });
 
         // Step 6: Animation loop to make the planets orbit around the Sun
@@ -119,6 +153,16 @@
                 planet.angle += planet.speed;  // Increment the angle
                 planet.mesh.position.x = planet.distance * Math.cos(planet.angle);  // x = r * cos(θ)
                 planet.mesh.position.z = planet.distance * Math.sin(planet.angle);  // z = r * sin(θ)
+            });
+
+            // Update the positions of planet labels to follow their respective planets
+            planetLabels.forEach(label => {
+                label.mesh.position.x = label.planet.position.x;
+                label.mesh.position.y = label.planet.position.y + 1.5;  // Position slightly above the planet
+                label.mesh.position.z = label.planet.position.z;
+
+                // Make labels always face the camera
+                label.mesh.lookAt(camera.position);
             });
 
             renderer.render(scene, camera);
