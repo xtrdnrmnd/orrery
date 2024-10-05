@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Solar System with Orbits</title>
+    <title>3D Solar System with Orbits and Custom Controls</title>
     <style>
         body, html {
             margin: 0;
@@ -18,23 +18,23 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
 
     <script>
-        // Create the scene, camera, and renderer
+        // Step 1: Create the scene, camera, and renderer
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // Position the camera to view the entire system
+        // Step 2: Position the camera to view the entire system
         camera.position.set(0, 20, 50);
 
-        // Create the Sun (large yellow sphere)
+        // Step 3: Create the Sun (large yellow sphere)
         const sunGeometry = new THREE.SphereGeometry(2, 32, 32);
         const sunMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
         const sun = new THREE.Mesh(sunGeometry, sunMaterial);
         scene.add(sun);
 
-        // Planet properties (name, distance from the Sun, size, color, and speed)
+        // Step 4: Define the properties of planets and create their orbits
         const planetsData = [
             { name: "Mercury", distance: 5, size: 0.2, color: 0xaaaaaa, speed: 0.02 },
             { name: "Venus", distance: 7, size: 0.4, color: 0xffcc00, speed: 0.015 },
@@ -83,7 +83,34 @@
         light.position.set(0, 0, 0);  // Light originates from the Sun
         scene.add(light);
 
-        // Animation loop to make the planets orbit around the Sun
+        // Step 5: Add custom camera controls
+        let isDragging = false;
+        let previousMousePosition = { x: 0, y: 0 };
+
+        // Event listeners for mouse and keyboard controls
+        document.addEventListener('mousedown', () => isDragging = true);
+        document.addEventListener('mouseup', () => isDragging = false);
+
+        document.addEventListener('mousemove', (event) => {
+            if (isDragging) {
+                const deltaMove = {
+                    x: event.clientX - previousMousePosition.x,
+                    y: event.clientY - previousMousePosition.y
+                };
+
+                // Rotate camera on mouse drag
+                camera.rotation.y += deltaMove.x * 0.005;
+                camera.rotation.x += deltaMove.y * 0.005;
+            }
+            previousMousePosition = { x: event.clientX, y: event.clientY };
+        });
+
+        // Zoom in/out with mouse wheel
+        document.addEventListener('wheel', (event) => {
+            camera.position.z += event.deltaY * 0.05;
+        });
+
+        // Step 6: Animation loop to make the planets orbit around the Sun
         function animate() {
             requestAnimationFrame(animate);
 
