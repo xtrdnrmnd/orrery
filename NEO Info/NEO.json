@@ -1,0 +1,362 @@
+[
+    {
+        "name": "154020 (2002 CA10)",
+        "magnitude": 19.07,
+        "estimated_diameter": {
+            "min": 407.9011940281,
+            "max": 912.0947979501
+        },
+        "potentially_hazardous": false,
+        "relative_velocity_km_per_h": 65963.0927051302,
+        "miss_distance_km": 57867897.644918926,
+        "orbiting_body": "Earth"
+    },
+    {
+        "name": "(2007 TS19)",
+        "magnitude": 20.71,
+        "estimated_diameter": {
+            "min": 191.6703679668,
+            "max": 428.5879720462
+        },
+        "potentially_hazardous": true,
+        "relative_velocity_km_per_h": 105155.3464301916,
+        "miss_distance_km": 63378373.27398662,
+        "orbiting_body": "Earth"
+    },
+    {
+        "name": "(2009 UQ5)",
+        "magnitude": 24.2,
+        "estimated_diameter": {
+            "min": 38.4197891064,
+            "max": 85.9092601232
+        },
+        "potentially_hazardous": false,
+        "relative_velocity_km_per_h": 52408.1356621517,
+        "miss_distance_km": 62664640.35519771,
+        "orbiting_body": "Earth"
+    },
+    {
+        "name": "(2012 HP15)",
+        "magnitude": 21.94,
+        "estimated_diameter": {
+            "min": 108.7814833562,
+            "max": 243.2427914778
+        },
+        "potentially_hazardous": false,
+        "relative_velocity_km_per_h": 66509.1568900966,
+        "miss_distance_km": 35943531.72170205,
+        "orbiting_body": "Earth"
+    },
+    {
+        "name": "(2014 VA)",
+        "magnitude": 24.42,
+        "estimated_diameter": {
+            "min": 34.7180222065,
+            "max": 77.6318576982
+        },
+        "potentially_hazardous": false,
+        "relative_velocity_km_per_h": 22667.4151315756,
+        "miss_distance_km": 6935481.56902997,
+        "orbiting_body": "Earth"
+    },
+    {
+        "name": "(2015 VY)",
+        "magnitude": 26.2,
+        "estimated_diameter": {
+            "min": 15.2951935344,
+            "max": 34.201092472
+        },
+        "potentially_hazardous": false,
+        "relative_velocity_km_per_h": 72908.6602888753,
+        "miss_distance_km": 58329829.58313317,
+        "orbiting_body": "Earth"
+    },
+    {
+        "name": "(2018 TF5)",
+        "magnitude": 25.4,
+        "estimated_diameter": {
+            "min": 22.1082810359,
+            "max": 49.435619262
+        },
+        "potentially_hazardous": false,
+        "relative_velocity_km_per_h": 48289.733264498,
+        "miss_distance_km": 9534491.5902818,
+        "orbiting_body": "Earth"
+    },
+    {
+        "name": "(2018 TJ6)",
+        "magnitude": 23.54,
+        "estimated_diameter": {
+            "min": 52.0660914218,
+            "max": 116.4233197418
+        },
+        "potentially_hazardous": false,
+        "relative_velocity_km_per_h": 71979.7561517527,
+        "miss_distance_km": 62264329.006339006,
+        "orbiting_body": "Earth"
+    },
+    {
+        "name": "(2019 RW1)",
+        "magnitude": 24.84,
+        "estimated_diameter": {
+            "min": 28.6124453783,
+            "max": 63.9793728683
+        },
+        "potentially_hazardous": false,
+        "relative_velocity_km_per_h": 40896.553692658,
+        "miss_distance_km": 34549931.34130207,
+        "orbiting_body": "Earth"
+    },
+    {
+        "name": "(2019 TB7)",
+        "magnitude": 26.8,
+        "estimated_diameter": {
+            "min": 11.6025908209,
+            "max": 25.9441817907
+        },
+        "potentially_hazardous": false,
+        "relative_velocity_km_per_h": 58152.3807569339,
+        "miss_distance_km": 62046388.63597119,
+        "orbiting_body": "Earth"
+    },
+    {
+        "name": "(2020 GS2)",
+        "magnitude": 23.0,
+        "estimated_diameter": {
+            "min": 66.7659413495,
+            "max": 149.2931834393
+        },
+        "potentially_hazardous": false,
+        "relative_velocity_km_per_h": 42298.9136645641,
+        "miss_distance_km": 40828217.33503478,
+        "orbiting_body": "Earth"
+    },
+    {
+        "name": "(2020 HE7)",
+        "magnitude": 28.8,
+        "estimated_diameter": {
+            "min": 4.6190746028,
+            "max": 10.328564805
+        },
+        "potentially_hazardous": false,
+        "relative_velocity_km_per_h": 28173.175108393,
+        "miss_distance_km": 39823921.40085166,
+        "orbiting_body": "Earth"
+    },
+    {
+        "name": "(2020 PH5)",
+        "magnitude": 22.36,
+        "estimated_diameter": {
+            "min": 89.6509666415,
+            "max": 200.465655659
+        },
+        "potentially_hazardous": false,
+        "relative_velocity_km_per_h": 43138.3532219251,
+        "miss_distance_km": 36293781.280309066,
+        "orbiting_body": "Earth"
+    },
+    {
+        "name": "(2021 RR19)",
+        "magnitude": 26.8,
+        "estimated_diameter": {
+            "min": 11.6025908209,
+            "max": 25.9441817907
+        },
+        "potentially_hazardous": false,
+        "relative_velocity_km_per_h": 59488.0532756842,
+        "miss_distance_km": 49891990.70028298,
+        "orbiting_body": "Earth"
+    },
+    {
+        "name": "(2022 UA34)",
+        "magnitude": 23.83,
+        "estimated_diameter": {
+            "min": 45.5569852336,
+            "max": 101.8685158322
+        },
+        "potentially_hazardous": false,
+        "relative_velocity_km_per_h": 23731.086641684,
+        "miss_distance_km": 46101006.46776337,
+        "orbiting_body": "Earth"
+    },
+    {
+        "name": "(2023 FK1)",
+        "magnitude": 26.8,
+        "estimated_diameter": {
+            "min": 11.6025908209,
+            "max": 25.9441817907
+        },
+        "potentially_hazardous": false,
+        "relative_velocity_km_per_h": 29610.4614257033,
+        "miss_distance_km": 27512279.648027755,
+        "orbiting_body": "Earth"
+    },
+    {
+        "name": "(2023 GM1)",
+        "magnitude": 27.26,
+        "estimated_diameter": {
+            "min": 9.3876086531,
+            "max": 20.9913310944
+        },
+        "potentially_hazardous": false,
+        "relative_velocity_km_per_h": 18718.8713758885,
+        "miss_distance_km": 5902621.238031607,
+        "orbiting_body": "Earth"
+    },
+    {
+        "name": "(2023 KX1)",
+        "magnitude": 28.85,
+        "estimated_diameter": {
+            "min": 4.5139316282,
+            "max": 10.0934579665
+        },
+        "potentially_hazardous": false,
+        "relative_velocity_km_per_h": 44788.9650849151,
+        "miss_distance_km": 58292878.490369126,
+        "orbiting_body": "Earth"
+    },
+    {
+        "name": "(2023 TQ3)",
+        "magnitude": 25.59,
+        "estimated_diameter": {
+            "min": 20.2560600865,
+            "max": 45.2939273097
+        },
+        "potentially_hazardous": false,
+        "relative_velocity_km_per_h": 26245.4455085494,
+        "miss_distance_km": 34371752.334485166,
+        "orbiting_body": "Earth"
+    },
+    {
+        "name": "(2024 EP3)",
+        "magnitude": 24.73,
+        "estimated_diameter": {
+            "min": 30.0992016548,
+            "max": 67.3038609686
+        },
+        "potentially_hazardous": false,
+        "relative_velocity_km_per_h": 28595.5895333767,
+        "miss_distance_km": 36845486.675913505,
+        "orbiting_body": "Earth"
+    },
+    {
+        "name": "(2024 RD5)",
+        "magnitude": 24.529,
+        "estimated_diameter": {
+            "min": 33.0183203336,
+            "max": 73.8312087688
+        },
+        "potentially_hazardous": false,
+        "relative_velocity_km_per_h": 18898.104047012,
+        "miss_distance_km": 21205639.681843743,
+        "orbiting_body": "Earth"
+    },
+    {
+        "name": "(2024 RG9)",
+        "magnitude": 24.242,
+        "estimated_diameter": {
+            "min": 37.6838248526,
+            "max": 84.2635940226
+        },
+        "potentially_hazardous": false,
+        "relative_velocity_km_per_h": 16274.5601129762,
+        "miss_distance_km": 22025752.977410696,
+        "orbiting_body": "Earth"
+    },
+    {
+        "name": "(2024 RP30)",
+        "magnitude": 21.675,
+        "estimated_diameter": {
+            "min": 122.9008754879,
+            "max": 274.8147120852
+        },
+        "potentially_hazardous": false,
+        "relative_velocity_km_per_h": 82448.2930533145,
+        "miss_distance_km": 48098903.943438195,
+        "orbiting_body": "Earth"
+    },
+    {
+        "name": "(2024 RJ32)",
+        "magnitude": 24.684,
+        "estimated_diameter": {
+            "min": 30.7436180973,
+            "max": 68.7448199399
+        },
+        "potentially_hazardous": false,
+        "relative_velocity_km_per_h": 23655.7195668669,
+        "miss_distance_km": 2929135.943662615,
+        "orbiting_body": "Earth"
+    },
+    {
+        "name": "(2024 SZ1)",
+        "magnitude": 24.963,
+        "estimated_diameter": {
+            "min": 27.0367805875,
+            "max": 60.4560792864
+        },
+        "potentially_hazardous": false,
+        "relative_velocity_km_per_h": 72909.3366150559,
+        "miss_distance_km": 4211349.280570331,
+        "orbiting_body": "Earth"
+    },
+    {
+        "name": "(2024 SH3)",
+        "magnitude": 25.816,
+        "estimated_diameter": {
+            "min": 18.2538709814,
+            "max": 40.816896367
+        },
+        "potentially_hazardous": false,
+        "relative_velocity_km_per_h": 29600.5138306833,
+        "miss_distance_km": 7282357.097277009,
+        "orbiting_body": "Earth"
+    },
+    {
+        "name": "(2024 SL3)",
+        "magnitude": 26.309,
+        "estimated_diameter": {
+            "min": 14.5463816078,
+            "max": 32.5266981016
+        },
+        "potentially_hazardous": false,
+        "relative_velocity_km_per_h": 45359.0822481008,
+        "miss_distance_km": 3125693.362964539,
+        "orbiting_body": "Earth"
+    },
+    {
+        "name": "(2024 SY5)",
+        "magnitude": 28.027,
+        "estimated_diameter": {
+            "min": 6.5940916133,
+            "max": 14.7448370972
+        },
+        "potentially_hazardous": false,
+        "relative_velocity_km_per_h": 21671.0538344576,
+        "miss_distance_km": 1639985.424407685,
+        "orbiting_body": "Earth"
+    },
+    {
+        "name": "(2024 SX6)",
+        "magnitude": 23.612,
+        "estimated_diameter": {
+            "min": 50.3680313443,
+            "max": 112.6263419787
+        },
+        "potentially_hazardous": false,
+        "relative_velocity_km_per_h": 30696.7033647269,
+        "miss_distance_km": 21381878.479085673,
+        "orbiting_body": "Earth"
+    },
+    {
+        "name": "(2024 TH)",
+        "magnitude": 24.51,
+        "estimated_diameter": {
+            "min": 33.3084924299,
+            "max": 74.4800533014
+        },
+        "potentially_hazardous": false,
+        "relative_velocity_km_per_h": 37257.9151635821,
+        "miss_distance_km": 9498460.165383376,
+        "orbiting_body": "Earth"
+    }
+]

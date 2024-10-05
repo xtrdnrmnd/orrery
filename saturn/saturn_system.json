@@ -1,0 +1,69 @@
+{
+    "saturn": {
+        "radius": 6,
+        "rotation_speed": 0.02
+    },
+    "rings": [
+        {
+            "name": "Inner Ring",
+            "inner_radius": 9,
+            "outer_radius": 13
+        },
+        {
+            "name": "Outer Ring",
+            "inner_radius": 13,
+            "outer_radius": 20
+        }
+    ],
+    "moons": [
+        {
+            "name": "Titan",
+            "distance_from_saturn": 40,
+            "radius": 1.5,
+            "rotation_speed": 0.005,
+            "initial_angle": 0.6283185307179586
+        },
+        {
+            "name": "Rhea",
+            "distance_from_saturn": 25,
+            "radius": 0.8,
+            "rotation_speed": 0.008,
+            "initial_angle": 0.6283185307179586
+        },
+        {
+            "name": "Iapetus",
+            "distance_from_saturn": 55,
+            "radius": 0.7,
+            "rotation_speed": 0.0025,
+            "initial_angle": 0.6283185307179586
+        },
+        {
+            "name": "Dione",
+            "distance_from_saturn": 22,
+            "radius": 0.7,
+            "rotation_speed": 0.01,
+            "initial_angle": 0.6283185307179586
+        },
+        {
+            "name": "Tethys",
+            "distance_from_saturn": 18,
+            "radius": 0.7,
+            "rotation_speed": 0.012,
+            "initial_angle": 0.6283185307179586
+        },
+        {
+            "name": "Enceladus",
+            "distance_from_saturn": 14,
+            "radius": 0.4,
+            "rotation_speed": 0.015,
+            "initial_angle": 0.6283185307179586
+        },
+        {
+            "name": "Mimas",
+            "distance_from_saturn": 10,
+            "radius": 0.3,
+            "rotation_speed": 0.02,
+            "initial_angle": 0.6283185307179586
+        }
+    ]
+}

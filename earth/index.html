@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earth, Moon, NEOs, Sun, Satellites, and Starfield Visualization</title>
+    <style>
+        body, html { margin: 0; padding: 0; overflow: hidden; background-color: #000; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <!-- Include Three.js from a CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+
+    <script>
+        // Step 1: Setup basic scene, camera, and renderer
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Step 2: Create a sphere to represent Earth with a blue material
+        const earthGeometry = new THREE.SphereGeometry(10, 32, 32);
+        const earthMaterial = new THREE.MeshPhongMaterial({ color: 0x3366ff, shininess: 50 });
+        const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+        scene.add(earth);
+
+        // Step 3: Add a weaker PointLight at Earth's position
+        const earthLight = new THREE.PointLight(0x3366ff, 0.5, 150);  // Soft, blue light
+        earthLight.position.set(0, 0, 0);  // Same position as Earth
+        scene.add(earthLight);
+
+        // Step 4: Create a sphere to represent the Sun and add a strong PointLight
+        const sunGeometry = new THREE.SphereGeometry(5, 32, 32);  // Smaller sphere for the Sun
+        const sunMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });  // Yellow color
+        const sun = new THREE.Mesh(sunGeometry, sunMaterial);
+        scene.add(sun);
+
+        const sunLight = new THREE.PointLight(0xffffff, 2, 1000);  // Bright white light
+        sun.add(sunLight);
+        scene.add(sun);
+
+        // Step 5: Set Sun’s initial position and orbit properties
+        let sunAngle = 0;
+        const sunDistance = 300;  // Distance of the Sun from Earth
+
+        // Step 6: Add the Moon orbiting around Earth
+        const moonGeometry = new THREE.SphereGeometry(2.5, 32, 32);  // Smaller sphere for the Moon
+        const moonMaterial = new THREE.MeshLambertMaterial({ color: 0xaaaaaa });
+        const moon = new THREE.Mesh(moonGeometry, moonMaterial);
+        scene.add(moon);
+
+        // Set initial positions for the Moon
+        let moonAngle = 0;
+        const moonDistance = 30;  // Distance from Earth
+
+        // Step 7: Load the NEO data from the JSON file
+        const neos = [];  // To store NEO objects
+        fetch('NEO_3D_Data.json')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(neo => {
+                    // Create small spheres for NEOs
+                    const neoGeometry = new THREE.SphereGeometry(1, 16, 16);
+                    const neoMaterial = new THREE.MeshLambertMaterial({ color: 0xff6666 });
+                    const neoSphere = new THREE.Mesh(neoGeometry, neoMaterial);
+
+                    // Set initial position based on JSON data
+                    neoSphere.position.set(neo.position.x / 1000, neo.position.y / 1000, neo.position.z / 1000);
+
+                    // Store initial angle, distance, and angular speed in userData
+                    neoSphere.userData = {
+                        angle: THREE.MathUtils.degToRad(neo.initial_angle),  // Convert degrees to radians
+                        distance: neo.distance_from_earth / 1000,  // Distance in km, scale down for visualization
+                        angularSpeed: neo.angular_speed  // Angular speed for rotation
+                    };
+                    
+                    neos.push(neoSphere);
+                    scene.add(neoSphere);
+                });
+            });
+
+        // Step 8: Create small particles to simulate satellites and space junk
+        function createSatellites(count, minDistance, maxDistance) {
+            const satelliteGeometry = new THREE.BufferGeometry();
+            const satelliteMaterial = new THREE.PointsMaterial({ color: 0xdddddd, size: 0.3 });  // Small size
+
+            // Generate random satellite positions around Earth
+            const satellitePositions = [];
+            const satelliteData = [];  // To store initial angles and distances for animation
+            for (let i = 0; i < count; i++) {
+                const distance = Math.random() * (maxDistance - minDistance) + minDistance;  // Random distance
+                const angle = Math.random() * 2 * Math.PI;  // Random initial angle
+
+                const x = distance * Math.cos(angle);
+                const y = 0;  // Assume satellites orbit on the equatorial plane
+                const z = distance * Math.sin(angle);
+
+                satellitePositions.push(x, y, z);
+                satelliteData.push({ distance, angle, speed: Math.random() * 0.01 + 0.005 });  // Random speed
+            }
+
+            // Store satellite positions in the geometry
+            satelliteGeometry.setAttribute('position', new THREE.Float32BufferAttribute(satellitePositions, 3));
+            const satellites = new THREE.Points(satelliteGeometry, satelliteMaterial);
+
+            satellites.userData = { satelliteData };  // Store the animation data
+            scene.add(satellites);
+            return satellites;
+        }
+
+        // Create satellites and space junk with a closer orbit around Earth
+        const satellites = createSatellites(50, 12, 14);  // 50 satellites in closer low Earth orbit
+
+        // Step 9: Create a starfield background
+        function createStarField(radius, count) {
+            const starGeometry = new THREE.BufferGeometry();
+            const starMaterial = new THREE.PointsMaterial({ color: 0xffffff });
+
+            // Generate random star positions within a large spherical shell
+            const starPositions = [];
+            for (let i = 0; i < count; i++) {
+                const r = radius;
+                const theta = Math.random() * 2 * Math.PI;
+                const phi = Math.acos(2 * Math.random() - 1);
+
+                const x = r * Math.sin(phi) * Math.cos(theta);
+                const y = r * Math.sin(phi) * Math.sin(theta);
+                const z = r * Math.cos(phi);
+
+                starPositions.push(x, y, z);
+            }
+
+            starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starPositions, 3));
+            const stars = new THREE.Points(starGeometry, starMaterial);
+            scene.add(stars);
+        }
+
+        createStarField(1000, 2000);  // Create a starfield with a radius of 1000 and 2000 stars
+
+        // Step 10: Camera Control Variables
+        let isDragging = false;
+        let previousMousePosition = { x: 0, y: 0 };
+        let zoomSpeed = 1;
+
+        // Step 11: Mouse Event Listeners for Camera Rotation
+        document.addEventListener('mousedown', () => isDragging = true);
+        document.addEventListener('mouseup', () => isDragging = false);
+
+        document.addEventListener('mousemove', (event) => {
+            if (isDragging) {
+                const deltaMove = {
+                    x: event.clientX - previousMousePosition.x,
+                    y: event.clientY - previousMousePosition.y
+                };
+
+                camera.rotation.y -= deltaMove.x * 0.005;
+                camera.rotation.x -= deltaMove.y * 0.005;
+            }
+            previousMousePosition = { x: event.clientX, y: event.clientY };
+        });
+
+        // Step 12: Scroll Event Listener for Zooming
+        document.addEventListener('wheel', (event) => {
+            const zoomAmount = event.deltaY * 0.05 * zoomSpeed;
+            camera.position.z += zoomAmount;
+
+            if (camera.position.z < 20) camera.position.z = 20; // Minimum zoom
+            if (camera.position.z > 500) camera.position.z = 500; // Maximum zoom
+        });
+
+        // Step 13: Animate and Rotate Objects
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Rotate the Moon around the Earth
+            moonAngle += 0.01;
+            moon.position.x = moonDistance * Math.cos(moonAngle);
+            moon.position.z = moonDistance * Math.sin(moonAngle);
+
+            // Rotate each NEO around the Earth using the calculated angular speed and angle
+            neos.forEach(neo => {
+                neo.userData.angle += neo.userData.angularSpeed;  // Increment angle using angularSpeed
+                neo.position.x = neo.userData.distance * Math.cos(neo.userData.angle);
+                neo.position.z = neo.userData.distance * Math.sin(neo.userData.angle);
+            });
+
+            // Move the Sun around the Earth
+            sunAngle += 0.002;  // Slow Sun orbit
+            sun.position.x = sunDistance * Math.cos(sunAngle);
+            sun.position.z = sunDistance * Math.sin(sunAngle);
+
+            // Animate satellites and space junk
+            const { satelliteData } = satellites.userData;
+            const positions = satellites.geometry.attributes.position.array;
+            for (let i = 0; i < satelliteData.length; i++) {
+                satelliteData[i].angle += satelliteData[i].speed;  // Update angle
+                const x = satelliteData[i].distance * Math.cos(satelliteData[i].angle);
+                const z = satelliteData[i].distance * Math.sin(satelliteData[i].angle);
+
+                // Update positions in the buffer geometry
+                positions[i * 3] = x;
+                positions[i * 3 + 2] = z;
+            }
+            satellites.geometry.attributes.position.needsUpdate = true;
+
+            renderer.render(scene, camera);
+        }
+
+        // Set initial camera position
+        camera.position.set(0, 50, 450);  // Set farther back to view the entire system
+        animate();
+    </script>
+</body>
+</html>
