@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Solar System with Dynamic Labels and Custom Controls</title>
+    <title>3D Solar System with Dynamic Labels, Custom Controls, and Asteroid Belt</title>
     <style>
         body, html {
             margin: 0;
@@ -14,27 +14,49 @@
     </style>
 </head>
 <body>
+    <div style="position: absolute; top: 10px; left: 10px; color: white; z-index: 100;">
+        <label for="speedControl">Simulation Speed: <span id="speedValue">1.0</span>x</label>
+        <input type="range" id="speedControl" min="0.1" max="5" step="0.1" value="1" style="width: 300px;">
+    </div>
+
+    
     <!-- Include Three.js from a CDN -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
 
     <script>
-        // Step 1: Create the scene, camera, and renderer
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
-
-        // Step 2: Position the camera to view the entire system
         camera.position.set(0, 20, 50);
 
-        // Step 3: Create the Sun (large yellow sphere)
+        function createStarfield(numStars, size) {
+            const starGeometry = new THREE.SphereGeometry(size, 8, 8);
+            const starMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+
+            const starField = new THREE.Group();
+            for (let i = 0; i < numStars; i++) {
+                const star = new THREE.Mesh(starGeometry, starMaterial);
+                star.position.set(
+                    (Math.random() - 0.5) * 1000, // Random x position
+                    (Math.random() - 0.5) * 1000, // Random y position
+                    (Math.random() - 0.5) * 1000  // Random z position
+                );
+                starField.add(star);
+            }
+
+            starField.renderOrder = -1;  // Ensure stars are rendered behind all other objects
+            scene.add(starField);
+        }
+
+        createStarfield(500, 0.5);  // Create 500 small stars with size 0.5
+
         const sunGeometry = new THREE.SphereGeometry(2, 32, 32);
         const sunMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
         const sun = new THREE.Mesh(sunGeometry, sunMaterial);
         scene.add(sun);
 
-        // Step 4: Define the properties of planets and create their orbits
         const planetsData = [
             { name: "Mercury", distance: 5, size: 0.2, color: 0xaaaaaa, speed: 0.02, textColor: "lightgray" },
             { name: "Venus", distance: 7, size: 0.4, color: 0xffcc00, speed: 0.015, textColor: "yellow" },
@@ -46,32 +68,25 @@
             { name: "Neptune", distance: 35, size: 0.6, color: 0x0000ff, speed: 0.001, textColor: "lightblue" }
         ];
 
-        // Store the planet meshes and orbital data
         const planets = [];
-        const planetLabels = [];  // To store planet labels
+        const planetLabels = [];
 
-        // Function to create a planet and its label
         function createPlanet({ name, distance, size, color, textColor }) {
             const geometry = new THREE.SphereGeometry(size, 32, 32);
             const material = new THREE.MeshLambertMaterial({ color: color });
             const planet = new THREE.Mesh(geometry, material);
-
-            // Initial position along the x-axis
             planet.position.set(distance, 0, 0);
 
-            // Create an orbit path (visual)
             const orbitGeometry = new THREE.RingGeometry(distance - 0.01, distance + 0.01, 64);
             const orbitMaterial = new THREE.MeshBasicMaterial({ color: 0xaaaaaa, side: THREE.DoubleSide });
             const orbit = new THREE.Mesh(orbitGeometry, orbitMaterial);
-            orbit.rotation.x = Math.PI / 2;  // Rotate to lie flat
+            orbit.rotation.x = Math.PI / 2;
 
-            // Add planet and orbit to the scene
             scene.add(planet);
             scene.add(orbit);
 
-            // Create the planet label with dynamic font size and color
             const label = createTextLabel(name, textColor, size);
-            label.position.set(distance, size + 0.5, 0);  // Position label above the planet
+            label.position.set(distance, size + 0.5, 0);
             scene.add(label);
 
             planetLabels.push({ mesh: label, planet: planet });
@@ -79,41 +94,88 @@
             return { mesh: planet, distance: distance, angle: 0, speed: 0.01 };
         }
 
-        // Function to create a text label as a THREE.Sprite with dynamic color and size
         function createTextLabel(name, textColor, size) {
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
-            const fontSize = size * 60;  // Dynamic font size based on planet size
+            const fontSize = size * 60;
             context.font = `Bold ${fontSize}px Arial`;
             context.fillStyle = textColor;
-            context.fillText(name, 10, 50);  // Position text on the canvas
+            context.fillText(name, 10, 50);
 
-            // Create a texture from the canvas
             const texture = new THREE.CanvasTexture(canvas);
             const spriteMaterial = new THREE.SpriteMaterial({ map: texture });
             const sprite = new THREE.Sprite(spriteMaterial);
-            sprite.scale.set(10, 5, 1);  // Adjust the size of the label based on font size
+            sprite.scale.set(10, 5, 1);
 
             return sprite;
         }
 
-        // Create the planets and store them in the planets array
         planetsData.forEach(planetData => {
             const planet = createPlanet(planetData);
-            planet.speed = planetData.speed;  // Set the orbital speed for the planet
+            planet.speed = planetData.speed;
             planets.push(planet);
         });
 
-        // Lighting to see planets better
+        function createAsteroid() {
+            const size = Math.random() * 0.05 + 0.02;
+            const geometry = new THREE.SphereGeometry(size, 16, 16);
+            const material = new THREE.MeshLambertMaterial({ color: 0x888888 });
+            const asteroid = new THREE.Mesh(geometry, material);
+            return asteroid;
+        }
+
+        function createAsteroidBelt(numAsteroids, innerRadius, outerRadius) {
+            const asteroidBelt = new THREE.Group();
+            for (let i = 0; i < numAsteroids; i++) {
+                const asteroid = createAsteroid();
+                const theta = Math.random() * 2 * Math.PI;
+                const radius = Math.random() * (outerRadius - innerRadius) + innerRadius;
+                asteroid.position.set(radius * Math.cos(theta), 0, radius * Math.sin(theta));
+                asteroidBelt.add(asteroid);
+            }
+            scene.add(asteroidBelt);
+            return asteroidBelt;
+        }
+
+        const asteroidBelt = createAsteroidBelt(1000, 14, 17);
+
         const light = new THREE.PointLight(0xffffff, 1.5, 100);
-        light.position.set(0, 0, 0);  // Light originates from the Sun
+        light.position.set(0, 0, 0);
         scene.add(light);
 
-        // Step 5: Add custom camera controls
+        function createKuiperBelt(numObjects, innerRadius, outerRadius) {
+            const kuiperBelt = new THREE.Group();
+            for (let i = 0; i < numObjects; i++) {
+                const objectSize = Math.random() * 0.1 + 0.02;
+                const geometry = new THREE.SphereGeometry(objectSize, 16, 16);
+                const material = new THREE.MeshLambertMaterial({ color: 0x5078A0 });
+                const object = new THREE.Mesh(geometry, material);
+
+                const theta = Math.random() * 2 * Math.PI;
+                const radius = Math.random() * (outerRadius - innerRadius) + innerRadius;
+                object.position.set(radius * Math.cos(theta), 0, radius * Math.sin(theta));
+
+                kuiperBelt.add(object);
+            }
+            scene.add(kuiperBelt);
+            return kuiperBelt;
+        }
+
+        const kuiperBelt = createKuiperBelt(2000, 36, 50);
+
+        let speedFactor = 1;
+        const speedControl = document.getElementById('speedControl');
+        const speedValueDisplay = document.getElementById('speedValue');
+
+
+        speedControl.addEventListener('input', function() {
+            speedFactor = parseFloat(this.value);
+            speedValueDisplay.textContent = speedFactor.toFixed(1) + 'x';
+        });
+
         let isDragging = false;
         let previousMousePosition = { x: 0, y: 0 };
 
-        // Event listeners for mouse and keyboard controls
         document.addEventListener('mousedown', () => isDragging = true);
         document.addEventListener('mouseup', () => isDragging = false);
 
@@ -124,51 +186,40 @@
                     y: event.clientY - previousMousePosition.y
                 };
 
-                // Rotate camera on mouse drag
                 camera.rotation.y += deltaMove.x * 0.005;
                 camera.rotation.x += deltaMove.y * 0.005;
             }
             previousMousePosition = { x: event.clientX, y: event.clientY };
         });
 
-        // Zoom in/out with mouse wheel
         document.addEventListener('wheel', (event) => {
-            // Calculate direction from the camera to the Sun
             const direction = new THREE.Vector3();
             direction.subVectors(sun.position, camera.position).normalize();
-
-            // Calculate zoom amount (positive for zooming in, negative for zooming out)
             const zoomAmount = event.deltaY * 0.05;
-
-            // Move the camera along the direction vector
             camera.position.addScaledVector(direction, zoomAmount);
         });
 
-        // Step 6: Animation loop to make the planets orbit around the Sun
         function animate() {
             requestAnimationFrame(animate);
+            asteroidBelt.rotation.y += 0.001;
 
-            // Update each planet's position based on its orbital speed
             planets.forEach(planet => {
-                planet.angle += planet.speed;  // Increment the angle
-                planet.mesh.position.x = planet.distance * Math.cos(planet.angle);  // x = r * cos(θ)
-                planet.mesh.position.z = planet.distance * Math.sin(planet.angle);  // z = r * sin(θ)
+                planet.angle += planet.speed * speedFactor;
+                planet.mesh.position.x = planet.distance * Math.cos(planet.angle);
+                planet.mesh.position.z = planet.distance * Math.sin(planet.angle);
             });
 
-            // Update the positions of planet labels to follow their respective planets
             planetLabels.forEach(label => {
                 label.mesh.position.x = label.planet.position.x;
-                label.mesh.position.y = label.planet.position.y + 1.5;  // Position slightly above the planet
+                label.mesh.position.y = label.planet.position.y + 1.5;
                 label.mesh.position.z = label.planet.position.z;
-
-                // Make labels always face the camera
                 label.mesh.lookAt(camera.position);
             });
 
             renderer.render(scene, camera);
         }
 
-        animate();  // Start the animation loop
+        animate();
     </script>
 </body>
 </html>
