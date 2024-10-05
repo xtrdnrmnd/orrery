@@ -1,28 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Solar System with Dynamic Labels, Custom Controls, and Asteroid Belt</title>
-    <style>
-        body, html {
-            margin: 0;
-            overflow: hidden;
-            height: 100%;
-            background-color: black;
-        }
-    </style>
+    <title>Space Simulation app</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <div style="position: absolute; top: 10px; left: 10px; color: white; z-index: 100;">
-        <label for="speedControl">Simulation Speed: <span id="speedValue">1.0</span>x</label>
-        <input type="range" id="speedControl" min="0.1" max="5" step="0.1" value="1" style="width: 300px;">
+    <div class="stars" id="star-field"></div>
+    <div class="container">
+        <h1>Space has no limits!</h1>
+        <h1>Does your imagination?</h1>
+
+        <div class="button-container">
+            <a href="./orrery.html"><button class="space-button">Static Orrery</button></a>
+            <button class="space-button">The 3 Planet problem</button>
+            <button class="space-button">Near Earth Objects</button>
+            <button class="space-button">Info</button>
+        </div>
+
+
     </div>
 
-    
-    <!-- Include Three.js from a CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+    <script>
+        function createStars(numStars) {
+            const starField = document.getElementById('star-field');
 
+
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+
+                // Set random width and height for the stars
+                const size = Math.random() * 3 + 1; // Sizes between 1px to 4px
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+
+                // Set random position for the stars
+                star.style.top = `${Math.random() * 100}vh`; // Use viewport height for positioning
+                star.style.left = `${Math.random() * 100}vw`; // Use viewport width for positioning
+
+                // Set random animation delay
+                const delay = Math.random() * 2; // Random delay between 0 and 2 seconds
+                star.style.animationDelay = `${delay}s`;
+
+                // Append the star to the star field
+                starField.appendChild(star);
+            }
+        }
+
+        // Create 600 stars for a fuller star field
+        createStars(1000);
+    </script>
     <script src="planets.js"></script>
 </body>
+
 </html>

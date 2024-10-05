@@ -1,0 +1,135 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000000;
+    /* Dark background */
+    overflow: hidden;
+    font-family: 'Arial', sans-serif;
+    color: #e0e0e0;
+    /* Light text for contrast */
+}
+
+.container {
+    position: relative;
+    text-align: center;
+    z-index: 2;
+    /* Ensure the content is above the stars */
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    /* Vertical layout */
+    gap: 20px;
+}
+
+h1 {
+    margin-bottom: 20px;
+    font-size: 48px;
+    /* Increased font size */
+    background: linear-gradient(135deg, #00f, #0ff, #fff, #f0f);
+    /* Gradient effect */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    /* Makes text transparent for gradient */
+    text-shadow:
+        0 0 5px rgba(255, 255, 255, 0.6),
+        /* Soft white glow */
+        0 0 10px rgba(255, 255, 255, 0.5),
+        /* Bright white glow */
+        0 0 15px rgba(0, 204, 204, 0.7);
+    /* Teal glow */
+    animation: fadeIn 1s ease forwards;
+    /* Animation for title entry */
+}
+
+.space-button {
+    padding: 15px 30px;
+    background-color: #1c1c1c;
+    /* Darker button background */
+    border: 2px solid #fff;
+    /* White border */
+    border-radius: 5px;
+    color: #e0e0e0;
+    /* Light button text */
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5), 0 0 10px rgba(255, 255, 255, 0.8);
+    /* Glowing effect */
+    animation: fadeIn 0.5s ease forwards;
+    /* Animation for button entry */
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.space-button:hover {
+    background-color: #3e3e3e;
+    /* Slightly lighter on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+}
+
+.space-button:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+h1 {
+    margin-bottom: 20px;
+    font-size: 36px;
+    color: #e0e0e0;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+    animation: fadeIn 1s ease forwards;
+    /* Animation for title entry */
+}
+
+.stars {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    /* Ensure the stars are not clickable */
+    z-index: 1;
+    /* Stars behind the content */
+}
+
+.star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: twinkling 2s infinite alternate;
+}
+
+@keyframes twinkling {
+    0% {
+        opacity: 0.8;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 0.2;
+    }
+}
