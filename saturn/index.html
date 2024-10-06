@@ -1,12 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Saturn System Visualization</title>
     <style>
-        body, html { margin: 0; padding: 0; overflow: hidden; background-color: #000; }
-        canvas { display: block; }
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        canvas {
+            display: block;
+        }
+
         #ui {
             position: absolute;
             top: 20px;
@@ -14,12 +25,15 @@
             color: white;
             z-index: 10;
         }
+
         .ui-item {
             margin-bottom: 10px;
         }
     </style>
 </head>
+
 <body>
+    <a href="../index.html"><button class="space-button space-button-back">Back</button></a>
     <!-- UI for Event Handling -->
     <div id="ui">
         <div class="ui-item">
@@ -34,15 +48,15 @@
                 Toggle Rings
             </label>
         </div>
-		<div class="ui-item">
-    		<label>
-        		<input type="checkbox" id="toggleLabels">
-        		Toggle Labels
-    		</label>
-		</div>
+        <div class="ui-item">
+            <label>
+                <input type="checkbox" id="toggleLabels">
+                Toggle Labels
+            </label>
+        </div>
 
     </div>
-    
+
     <!-- Include Three.js from a CDN -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
 
@@ -93,7 +107,7 @@
         // Step 5: Load the Saturn system data from the JSON file
         let moons = [];
         let rings = [];
-		let labels = [];
+        let labels = [];
 
         fetch('saturn_system.json')
             .then(response => response.json())
@@ -119,31 +133,31 @@
                     scene.add(moonMesh);
                     moons.push(moonMesh);
 
-					const label = createLabel(moon.name);
-					label.position.set(moonMesh.position.x, moonMesh.position.y + moon.radius * 1.5, moonMesh.position.z);
-					label.visible = true;
-					scene.add(label);
-					labels.push({ label, moonMesh });
+                    const label = createLabel(moon.name);
+                    label.position.set(moonMesh.position.x, moonMesh.position.y + moon.radius * 1.5, moonMesh.position.z);
+                    label.visible = true;
+                    scene.add(label);
+                    labels.push({ label, moonMesh });
                 });
             });
 
-		function createLabel(text) {
-			const canvas = document.createElement('canvas');
-			const context = canvas.getContext('2d');
-			canvas.width = 512;
-			canvas.height = 256;
-			context.font = `Bold 40px Arial`;
-			context.fillStyle = 'white';
-			context.fillText(text, 10, 50);
+        function createLabel(text) {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = 512;
+            canvas.height = 256;
+            context.font = `Bold 40px Arial`;
+            context.fillStyle = 'white';
+            context.fillText(text, 10, 50);
 
-			// Create a texture from the canvas
-			const texture = new THREE.CanvasTexture(canvas);
-			const spriteMaterial = new THREE.SpriteMaterial({ map: texture });
-			const sprite = new THREE.Sprite(spriteMaterial);
-			sprite.scale.set(10, 5, 1); // Adjust label size
+            // Create a texture from the canvas
+            const texture = new THREE.CanvasTexture(canvas);
+            const spriteMaterial = new THREE.SpriteMaterial({ map: texture });
+            const sprite = new THREE.Sprite(spriteMaterial);
+            sprite.scale.set(10, 5, 1); // Adjust label size
 
-			return sprite;
-		}
+            return sprite;
+        }
 
         // Function to create a particle ring around Saturn
         function createRingParticles(innerRadius, outerRadius, count) {
@@ -187,24 +201,24 @@
         scene.add(ambientLight);
 
         // Step 7: Event Handling for UI Controls
-        document.getElementById('toggleMoons').addEventListener('change', function(event) {
+        document.getElementById('toggleMoons').addEventListener('change', function (event) {
             const showMoons = event.target.checked;
-			const showLabels = event.target.checked;
+            const showLabels = event.target.checked;
             moons.forEach(moon => moon.visible = showMoons);
-			labels.forEach(({ label }) => label.visible = showLabels);
+            labels.forEach(({ label }) => label.visible = showLabels);
         });
 
-        document.getElementById('toggleRings').addEventListener('change', function(event) {
+        document.getElementById('toggleRings').addEventListener('change', function (event) {
             const showRings = event.target.checked;
             rings.forEach(ring => ring.visible = showRings);
         });
 
-		document.getElementById('toggleLabels').addEventListener('change', function(event) {
-    		const showLabels = event.target.checked;
-    		labels.forEach(({ label }) => label.visible = showLabels);
-		});
+        document.getElementById('toggleLabels').addEventListener('change', function (event) {
+            const showLabels = event.target.checked;
+            labels.forEach(({ label }) => label.visible = showLabels);
+        });
 
-		
+
 
         // Step 8: Camera Control Variables
         camera.position.set(0, 50, 300);
@@ -249,14 +263,14 @@
 
             // Update moon positions
             moons.forEach((moon, index) => {
-        		moon.userData.angle += moon.userData.speed;
-        		moon.position.x = moon.userData.distance * Math.cos(moon.userData.angle);
-        		moon.position.z = moon.userData.distance * Math.sin(moon.userData.angle);
+                moon.userData.angle += moon.userData.speed;
+                moon.position.x = moon.userData.distance * Math.cos(moon.userData.angle);
+                moon.position.z = moon.userData.distance * Math.sin(moon.userData.angle);
 
-       	 		// Update label positions to follow moons
-        		labels[index].label.position.set(moon.position.x, moon.position.y + moon.geometry.parameters.radius * 1.5, moon.position.z);
-        		labels[index].label.lookAt(camera.position); // Make label face the camera
-    		});
+                // Update label positions to follow moons
+                labels[index].label.position.set(moon.position.x, moon.position.y + moon.geometry.parameters.radius * 1.5, moon.position.z);
+                labels[index].label.lookAt(camera.position); // Make label face the camera
+            });
 
             // Move the Sun around Saturn
             sunAngle += sunOrbitalSpeed;
@@ -269,4 +283,5 @@
         animate();
     </script>
 </body>
+
 </html>

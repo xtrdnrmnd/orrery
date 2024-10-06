@@ -1,15 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Earth, Moon, NEOs, Sun, Satellites, and Starfield Visualization</title>
     <style>
-        body, html { margin: 0; padding: 0; overflow: hidden; background-color: #000; }
-        canvas { display: block; }
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        canvas {
+            display: block;
+        }
     </style>
 </head>
+
 <body>
+    <a href="../index.html"><button class="space-button space-button-back">Back</button></a>
     <!-- Include Three.js from a CDN -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
 
@@ -76,7 +88,7 @@
                         distance: neo.distance_from_earth / 1000,  // Distance in km, scale down for visualization
                         angularSpeed: neo.angular_speed  // Angular speed for rotation
                     };
-                    
+
                     neos.push(neoSphere);
                     scene.add(neoSphere);
                 });
@@ -214,4 +226,5 @@
         animate();
     </script>
 </body>
+
 </html>
