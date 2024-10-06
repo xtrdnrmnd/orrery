@@ -95,7 +95,7 @@
                 const angle = Math.random() * 2 * Math.PI;  // Random initial angle
 
                 const x = distance * Math.cos(angle);
-                const y = 0;  // Assume satellites orbit on the equatorial plane
+                const y = distance * Math.sin(angle) * Math.cos(angle);  // Assume satellites orbit on the equatorial plane
                 const z = distance * Math.sin(angle);
 
                 satellitePositions.push(x, y, z);
@@ -112,7 +112,7 @@
         }
 
         // Create satellites and space junk with a closer orbit around Earth
-        const satellites = createSatellites(50, 12, 14);  // 50 satellites in closer low Earth orbit
+        const satellites = createSatellites(150, 12, 14);  // 50 satellites in closer low Earth orbit
 
         // Step 9: Create a starfield background
         function createStarField(radius, count) {
