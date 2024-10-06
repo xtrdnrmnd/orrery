@@ -142,10 +142,10 @@ const scene = new THREE.Scene();
         const speedValueDisplay = document.getElementById('speedValue');
 
 
-        speedControl.addEventListener('input', function() {
-            speedFactor = parseFloat(this.value);
-            speedValueDisplay.textContent = speedFactor.toFixed(1) + 'x';
-        });
+        // speedControl.addEventListener('input', function() {
+        //     speedFactor = parseFloat(this.value);
+        //     speedValueDisplay.textContent = speedFactor.toFixed(1) + 'x';
+        // });
 
         let isDragging = false;
         let previousMousePosition = { x: 0, y: 0 };
