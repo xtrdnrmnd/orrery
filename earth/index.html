@@ -22,13 +22,22 @@
 
 <body>
     <a href="../index.html"><button class="space-button space-button-back">Back</button></a>
+    <div id="ui">
+        <label>
+            <input type="checkbox" id="toggleMoonDistance"> Toggle Moon Distance (637/40)
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" id="toggleMoonLabel" checked> Toggle Moon Label
+        </label>
+    </div>
     <!-- Include Three.js from a CDN -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
 
     <script>
         // Step 1: Setup basic scene, camera, and renderer
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
+        const camera = new THREE.PerspectiveCamera(105, window.innerWidth / window.innerHeight, 0.1, 10000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
@@ -46,17 +55,17 @@
 
         // Step 4: Create a sphere to represent the Sun and add a strong PointLight
         const sunGeometry = new THREE.SphereGeometry(5, 32, 32);  // Smaller sphere for the Sun
-        const sunMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });  // Yellow color
+        const sunMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });  // Yellow color
         const sun = new THREE.Mesh(sunGeometry, sunMaterial);
         scene.add(sun);
 
-        const sunLight = new THREE.PointLight(0xffffff, 2, 1000);  // Bright white light
+        const sunLight = new THREE.PointLight(0xffffff, 2, 2000);  // Bright white light
         sun.add(sunLight);
         scene.add(sun);
 
         // Step 5: Set Sun’s initial position and orbit properties
         let sunAngle = 0;
-        const sunDistance = 300;  // Distance of the Sun from Earth
+        const sunDistance = 990;  // Distance of the Sun from Earth
 
         // Step 6: Add the Moon orbiting around Earth
         const moonGeometry = new THREE.SphereGeometry(2.5, 32, 32);  // Smaller sphere for the Moon
@@ -66,8 +75,10 @@
 
         // Set initial positions for the Moon
         let moonAngle = 0;
-        const moonDistance = 30;  // Distance from Earth
+        let moonDistance = 637;  // Distance from Earth
 
+        
+        
         // Step 7: Load the NEO data from the JSON file
         const neos = [];  // To store NEO objects
         fetch('NEO_3D_Data.json')
@@ -85,7 +96,7 @@
                     // Store initial angle, distance, and angular speed in userData
                     neoSphere.userData = {
                         angle: THREE.MathUtils.degToRad(neo.initial_angle),  // Convert degrees to radians
-                        distance: neo.distance_from_earth / 1000,  // Distance in km, scale down for visualization
+                        distance: neo.distance_from_earth / 471,  // Distance in km, scale down for visualization
                         angularSpeed: neo.angular_speed  // Angular speed for rotation
                     };
 
@@ -97,7 +108,7 @@
         // Step 8: Create small particles to simulate satellites and space junk
         function createSatellites(count, minDistance, maxDistance) {
             const satelliteGeometry = new THREE.BufferGeometry();
-            const satelliteMaterial = new THREE.PointsMaterial({ color: 0xdddddd, size: 0.3 });  // Small size
+            const satelliteMaterial = new THREE.PointsMaterial({ color: 0xdddddd, size: 0.1 });  // Small size
 
             // Generate random satellite positions around Earth
             const satellitePositions = [];
@@ -158,6 +169,11 @@
         let zoomSpeed = 1;
 
         // Step 11: Mouse Event Listeners for Camera Rotation
+        const moonDistanceToggle = document.getElementById('toggleMoonDistance');
+        moonDistanceToggle.addEventListener('change', function() {
+            moonDistance = this.checked ? 40 : 637;
+        });
+
         document.addEventListener('mousedown', () => isDragging = true);
         document.addEventListener('mouseup', () => isDragging = false);
 
@@ -167,7 +183,7 @@
                     x: event.clientX - previousMousePosition.x,
                     y: event.clientY - previousMousePosition.y
                 };
-
+                
                 camera.rotation.y -= deltaMove.x * 0.005;
                 camera.rotation.x -= deltaMove.y * 0.005;
             }
@@ -178,10 +194,38 @@
         document.addEventListener('wheel', (event) => {
             const zoomAmount = event.deltaY * 0.05 * zoomSpeed;
             camera.position.z += zoomAmount;
-
+            
             if (camera.position.z < 20) camera.position.z = 20; // Minimum zoom
             if (camera.position.z > 500) camera.position.z = 500; // Maximum zoom
         });
+        
+
+        const moonLabel = createLabel('Moon');
+        moonLabel.position.set(moon.position.x, moon.position.y - 5, moon.position.z);
+        scene.add(moonLabel);
+
+        const moonLabelToggle = document.getElementById('toggleMoonLabel');
+        moonLabelToggle.addEventListener('change', function() {
+            moonLabel.visible = this.checked;
+        });
+
+        // Create label function
+        function createLabel(text) {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = 128;
+            canvas.height = 64;
+            context.fillStyle = '#FFFFFF';
+            context.font = 'Bold 24px Arial';
+            context.fillText(text, canvas.width / 2, canvas.height / 2);
+
+            const texture = new THREE.Texture(canvas);
+            texture.needsUpdate = true;
+            const material = new THREE.SpriteMaterial({ map: texture, transparent: false });
+            const sprite = new THREE.Sprite(material);
+            sprite.scale.set(15, 7.5, 1);
+            return sprite;
+        }
 
         // Step 13: Animate and Rotate Objects
         function animate() {
@@ -191,6 +235,7 @@
             moonAngle += 0.01;
             moon.position.x = moonDistance * Math.cos(moonAngle);
             moon.position.z = moonDistance * Math.sin(moonAngle);
+            moonLabel.position.set(moon.position.x, moon.position.y + 5, moon.position.z);
 
             // Rotate each NEO around the Earth using the calculated angular speed and angle
             neos.forEach(neo => {
