@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Solar System with Spaceship</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        #controls {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        #distanceDisplay {
+            position: absolute;
+            top: 150px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="controls">
+        <label for="speedControl">Speed:</label>
+        <input id="speedControl" type="range" min="0.1" max="5" step="0.1" value="1">
+        <span id="speedValue">1x</span>
+        <br>
+        <label for="trajectoryX">Trajectory X:</label>
+        <input id="trajectoryX" type="number" value="20">
+        <br>
+        <label for="trajectoryZ">Trajectory Z:</label>
+        <input id="trajectoryZ" type="number" value="0">
+        <br>
+        <label for="trajectorySpeed">Trajectory Speed:</label>
+        <input id="trajectorySpeed" type="number" value="0.1">
+        <br>
+        <button id="launchButton">Launch Spaceship</button>
+        <button id="stopButton">Stop Spaceship</button>
+        <button id="changeDirectionButton">Change Direction</button>
+        <button id="restartButton">Restart Launch</button>
+    </div>
+    <div id="distanceDisplay">Distance Traveled: 0 units</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+
+    <script>
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+        camera.position.set(0, 20, 50);
+
+        function createStarfield(numStars, size) {
+            const starGeometry = new THREE.SphereGeometry(size, 8, 8);
+            const starMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+
+            const starField = new THREE.Group();
+            for (let i = 0; i < numStars; i++) {
+                const star = new THREE.Mesh(starGeometry, starMaterial);
+                star.position.set(
+                    (Math.random() - 0.5) * 1000,
+                    (Math.random() - 0.5) * 1000,
+                    (Math.random() - 0.5) * 1000
+                );
+                starField.add(star);
+            }
+
+            starField.renderOrder = -1;
+            scene.add(starField);
+        }
+
+        createStarfield(500, 0.5);
+
+        const sunGeometry = new THREE.SphereGeometry(2, 32, 32);
+        const sunMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+        const sun = new THREE.Mesh(sunGeometry, sunMaterial);
+        scene.add(sun);
+
+        const planetsData = [
+            { name: "Mercury", distance: 5, size: 0.2, color: 0xaaaaaa, speed: 0.02 },
+            { name: "Venus", distance: 7, size: 0.4, color: 0xffcc00, speed: 0.015 },
+            { name: "Earth", distance: 10, size: 0.5, color: 0x0000ff, speed: 0.01 },
+            { name: "Mars", distance: 13, size: 0.3, color: 0xff0000, speed: 0.008 },
+            { name: "Jupiter", distance: 18, size: 1.1, color: 0xff9900, speed: 0.005 },
+            { name: "Saturn", distance: 24, size: 0.9, color: 0xffff66, speed: 0.003 },
+            { name: "Uranus", distance: 30, size: 0.7, color: 0x66ccff, speed: 0.002 },
+            { name: "Neptune", distance: 35, size: 0.6, color: 0x0000ff, speed: 0.001 }
+        ];
+
+        const planets = [];
+        const planetLabels = [];
+
+        function createPlanet({ name, distance, size, color }) {
+            const geometry = new THREE.SphereGeometry(size, 32, 32);
+            const material = new THREE.MeshLambertMaterial({ color: color });
+            const planet = new THREE.Mesh(geometry, material);
+            planet.position.set(distance, 0, 0);
+
+            const orbitGeometry = new THREE.RingGeometry(distance - 0.01, distance + 0.01, 64);
+            const orbitMaterial = new THREE.MeshBasicMaterial({ color: 0xaaaaaa, side: THREE.DoubleSide });
+            const orbit = new THREE.Mesh(orbitGeometry, orbitMaterial);
+            orbit.rotation.x = Math.PI / 2;
+
+            scene.add(planet);
+            scene.add(orbit);
+
+            const label = createTextLabel(name, color, size);
+            label.position.set(distance, size + 0.5, 0);
+            scene.add(label);
+
+            planetLabels.push({ mesh: label, planet: planet });
+
+            return { mesh: planet, distance: distance, angle: 0, speed: 0.01 };
+        }
+
+        function createTextLabel(name, color, size) {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            const fontSize = size * 60;
+            context.font = `Bold ${fontSize}px Arial`;
+            context.fillStyle = color;
+            context.fillText(name, 10, 50);
+
+            const texture = new THREE.CanvasTexture(canvas);
+            const spriteMaterial = new THREE.SpriteMaterial({ map: texture });
+            const sprite = new THREE.Sprite(spriteMaterial);
+            sprite.scale.set(10, 5, 1);
+
+            return sprite;
+        }
+
+        planetsData.forEach(planetData => {
+            const planet = createPlanet(planetData);
+            planet.speed = planetData.speed;
+            planets.push(planet);
+        });
+
+        const light = new THREE.PointLight(0xffffff, 1.5, 100);
+        light.position.set(0, 0, 0);
+        scene.add(light);
+
+        let speedFactor = 1;
+        const speedControl = document.getElementById('speedControl');
+        const speedValueDisplay = document.getElementById('speedValue');
+
+        speedControl.addEventListener('input', function () {
+            speedFactor = parseFloat(this.value);
+            speedValueDisplay.textContent = speedFactor.toFixed(1) + 'x';
+        });
+
+        let currentView = "solar";
+        let planetViewPosition = { x: 0, y: 0, z: 0 };
+        let currentPlanetIndex = null;
+        let spaceship;
+        let spaceshipTrajectory = { x: 0, z: 0, speed: 0, launched: false };
+        let distanceTraveled = 0;
+
+        const raycaster = new THREE.Raycaster();
+        window.addEventListener('click', function (event) {
+            raycaster.setFromCamera(
+                new THREE.Vector2((event.clientX / window.innerWidth) * 2 - 1, - (event.clientY / window.innerHeight) * 2 + 1),
+                camera
+            );
+
+            const intersects = raycaster.intersectObjects(planets.map(planet => planet.mesh));
+
+            if (intersects.length > 0) {
+                const selectedPlanet = intersects[0].object;
+                currentPlanetIndex = planets.findIndex(planet => planet.mesh === selectedPlanet);
+            }
+        });
+
+        function createSpaceship() {
+            const geometry = new THREE.BoxGeometry(0.5, 0.2, 1.5);
+            const material = new THREE.MeshLambertMaterial({ color: 0xff0000 });
+            const spaceshipMesh = new THREE.Mesh(geometry, material);
+            return spaceshipMesh;
+        }
+
+        document.getElementById('launchButton').addEventListener('click', function () {
+            const trajectoryX = parseFloat(document.getElementById('trajectoryX').value);
+            const trajectoryZ = parseFloat(document.getElementById('trajectoryZ').value);
+            const trajectorySpeed = parseFloat(document.getElementById('trajectorySpeed').value);
+
+            // Create the spaceship if it doesn't exist
+            if (!spaceship) {
+                spaceship = createSpaceship();
+                scene.add(spaceship);
+            }
+
+            spaceship.position.set(currentPlanetIndex !== null ? planets[currentPlanetIndex].distance : 20, 1, 0);
+            spaceshipTrajectory.x = trajectoryX;
+            spaceshipTrajectory.z = trajectoryZ;
+            spaceshipTrajectory.speed = trajectorySpeed;
+            spaceshipTrajectory.launched = true;
+
+            // Move the camera to the spaceship perspective
+            camera.position.set(spaceship.position.x, spaceship.position.y + 1, spaceship.position.z + 3);
+            camera.lookAt(spaceship.position);
+        });
+
+        document.getElementById('stopButton').addEventListener('click', function () {
+            spaceshipTrajectory.launched = false;
+        });
+
+        document.getElementById('restartButton').addEventListener('click', function () {
+            if (spaceship) {
+                spaceship.position.set(0, 1, 0);
+                spaceshipTrajectory.launched = false;
+                distanceTraveled = 0;
+                camera.position.set(0, 20, 50); // Reset camera to original position
+                camera.lookAt(0, 0, 0); // Reset camera view to the solar system
+            }
+        });
+
+        document.getElementById('changeDirectionButton').addEventListener('click', function () {
+            if (spaceshipTrajectory.launched) {
+                spaceshipTrajectory.x = -spaceshipTrajectory.x;
+                spaceshipTrajectory.z = -spaceshipTrajectory.z;
+            }
+        });
+
+        function animate() {
+            requestAnimationFrame(animate);
+            planets.forEach((planet, index) => {
+                planet.angle += planet.speed * speedFactor;
+                planet.mesh.position.x = planet.distance * Math.cos(planet.angle);
+                planet.mesh.position.z = planet.distance * Math.sin(planet.angle);
+                planetLabels[index].mesh.position.set(planet.mesh.position.x, planet.mesh.position.y + 0.5, planet.mesh.position.z);
+            });
+
+            if (spaceshipTrajectory.launched) {
+                spaceship.position.x += spaceshipTrajectory.x * spaceshipTrajectory.speed;
+                spaceship.position.z += spaceshipTrajectory.z * spaceshipTrajectory.speed;
+                distanceTraveled += Math.sqrt(spaceshipTrajectory.x ** 2 + spaceshipTrajectory.z ** 2) * spaceshipTrajectory.speed;
+
+                // Update the camera to follow the spaceship
+                camera.position.x = spaceship.position.x;
+                camera.position.y = spaceship.position.y + 1;
+                camera.position.z = spaceship.position.z + 3;
+                camera.lookAt(spaceship.position);
+
+                const distanceDisplay = document.getElementById('distanceDisplay');
+                distanceDisplay.textContent = 'Distance Traveled: ' + distanceTraveled.toFixed(2) + ' units';
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    </script>
+</body>
+
+</html>
