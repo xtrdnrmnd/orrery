@@ -4,8 +4,8 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-const G = 1;
-const dt = 0.6;
+const G = 2;
+const dt = 0.8;
 
 // Body class with a tracking mechanism
 class Body {
@@ -77,10 +77,10 @@ class Body {
 
 // Create three bodies
 const bodies = [
-    new Body(canvas.width / 2 - 100, canvas.height / 2, 100, 0, 0, "red"),
-    new Body(canvas.width / 3 + 100, canvas.height / 2, 100, 0, 1, "green"),
-    new Body(canvas.width / 2, canvas.height / 2 - 100, 150, 1, 0, "blue")
-    // new Body(canvas.width / 2 - 50, canvas.height / 2 - 100, 50, 2, 2, "orange")
+    new Body(canvas.width / 2 - 100, canvas.height / 2, Math.random() * 100 + 50, 0, 0, "red"),
+    new Body(canvas.width / 3 + 100, canvas.height / 2, Math.random() * 100 + 50, 0, 1, "green"),
+    new Body(canvas.width / 2, canvas.height / 2 - 100, Math.random() * 100 + 50, 1, 0, "blue")
+    // new Body(canvas.width / 2 - 50, canvas.height / 2 - 100, Math.random() * 100 + 50, 2, 2, "orange")
 ];
 
 // Main animation loop
