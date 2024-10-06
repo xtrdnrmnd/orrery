@@ -12,20 +12,22 @@
             padding: 0;
             overflow: hidden;
             background-color: #000;
-            color:aliceblue;
+            color: aliceblue;
         }
 
         canvas {
             display: block;
         }
     </style>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../menu_bar.css">
 </head>
 
 <body>
     <a href="../index.html"><button class="space-button space-button-back">Back</button></a>
     <div id="ui">
         <label>
-            <input type="checkbox" id="toggleMoonDistance">  Toggle Moon Distance (637/40)
+            <input type="checkbox" id="toggleMoonDistance"> Toggle Moon Distance (637/40)
         </label>
         <br>
         <label>
@@ -78,8 +80,8 @@
         let moonAngle = 0;
         let moonDistance = 637;  // Distance from Earth
 
-        
-        
+
+
         // Step 7: Load the NEO data from the JSON file
         const neos = [];  // To store NEO objects
         fetch('NEO_3D_Data.json')
@@ -171,7 +173,7 @@
 
         // Step 11: Mouse Event Listeners for Camera Rotation
         const moonDistanceToggle = document.getElementById('toggleMoonDistance');
-        moonDistanceToggle.addEventListener('change', function() {
+        moonDistanceToggle.addEventListener('change', function () {
             moonDistance = this.checked ? 40 : 637;
         });
 
@@ -184,7 +186,7 @@
                     x: event.clientX - previousMousePosition.x,
                     y: event.clientY - previousMousePosition.y
                 };
-                
+
                 camera.rotation.y -= deltaMove.x * 0.005;
                 camera.rotation.x -= deltaMove.y * 0.005;
             }
@@ -195,18 +197,18 @@
         document.addEventListener('wheel', (event) => {
             const zoomAmount = event.deltaY * 0.05 * zoomSpeed;
             camera.position.z += zoomAmount;
-            
+
             if (camera.position.z < 20) camera.position.z = 20; // Minimum zoom
             if (camera.position.z > 500) camera.position.z = 500; // Maximum zoom
         });
-        
+
 
         const moonLabel = createLabel('Moon');
         moonLabel.position.set(moon.position.x, moon.position.y - 5, moon.position.z);
         scene.add(moonLabel);
 
         const moonLabelToggle = document.getElementById('toggleMoonLabel');
-        moonLabelToggle.addEventListener('change', function() {
+        moonLabelToggle.addEventListener('change', function () {
             moonLabel.visible = this.checked;
         });
 

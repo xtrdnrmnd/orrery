@@ -124,6 +124,17 @@ h1 {
     animation: twinkling 2s infinite alternate;
 }
 
+.btn-prim {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-bottom: 2px solid white;
+    width: 100%;
+    margin-top: 50px;
+}
+
 @keyframes twinkling {
     0% {
         opacity: 0.8;
